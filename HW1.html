@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden;
+}
+
+
+</style>
+</head>
+
+<body> 
+<div id="info">HW1.js<br>
+	<button id='dimmer'>dimmer</button><br>
+	<button id="play" style="width:20%">Play</button> 
+</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+<audio id="collisionsound" style="display:none">
+<source src="https://jyunming-chen.github.io/game3js/gameHWhelpers/sounds/collision3.wav" type='audio/wav'>
+</audio>
+<audio id="soundtrack" autoplay loop style="display:none">
+<source src="https://jyunming-chen.github.io/game3js/gameHWhelpers/sounds/KennyG.mp3" type='audio/mp3'>
+</audio>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>
+var camera, scene, renderer;
+var angle = 0;
+var pucks = [];
+const R=10
+var collisionSound, soundTrack;
+var isDimming = false, soundVal = 1.0, sign = 1.0;
+var isPaused = false;
+
+$('#play').click ( function() {
+	isPaused = !isPaused;
+	if (isPaused) { 
+		$('#play').text ('Play')
+		soundTrack.pause()
+	} else {
+		$('#play').text ('Pause')
+		soundTrack.play()
+	}
+});
+
+$('#dimmer').click (function() { toggle(); });
+
+class Puck {
+	constructor (vel, mesh, light) {
+		this.vel = vel;
+		this.mesh = mesh;
+		this.pos = mesh.position;
+		this.light = light;
+	}
+	setf(an,mat){
+		this.pos.set(85*Math.cos(an), 3, -85*Math.sin(an));
+		this.light.color.copy (mat.color);
+		this.lightmove();
+	}
+	lightmove(){
+		this.light.position.copy (this.mesh.position);
+		this.light.position.y += 12;
+	}
+	puck_collision(puck2, distance_x, distance_z,clooisionVectorLength){
+		var collisionX = distance_x / clooisionVectorLength;
+		var collisionZ = distance_z / clooisionVectorLength;
+		var collision_ball1_x = Math.pow(collisionX, 2) * this.vel.x + collisionX * collisionZ * this.vel.z;  			
+		var collision_ball1_z = collisionX * collisionZ * this.vel.x + Math.pow(collisionZ, 2) * this.vel.z;
+
+		var collision_ball2_x = Math.pow(collisionX, 2) * puck2.vel.x + collisionX * collisionZ * puck2.vel.z;
+		var collision_ball2_z = collisionX * collisionZ * puck2.vel.x + Math.pow(collisionZ, 2) * puck2.vel.z;
+
+		this.vel.x = collision_ball2_x + (this.vel.x - collision_ball1_x);
+		this.vel.z = collision_ball2_z + (this.vel.z - collision_ball1_z);
+		puck2.vel.x = collision_ball1_x + (puck2.vel.x - collision_ball2_x);
+		puck2.vel.z = collision_ball1_z + (puck2.vel.z - collision_ball2_z);
+
+		this.pos.x += collisionX * (2 * R- clooisionVectorLength);
+		this.pos.z += collisionZ * (2 * R- clooisionVectorLength);
+		puck2.pos.x += -1 * collisionX * (2 * R- clooisionVectorLength);
+		puck2.pos.z += -1 * collisionZ * (2 * R- clooisionVectorLength);
+	}
+	update(dt, i, pucks) {
+		this.pos.add (this.vel.clone().multiplyScalar (dt));
+		
+		// wall-collision
+		if (this.pos.x < -150 + R){
+			this.vel.x = - this.vel.x;
+			this.pos.x = -150 + R;
+			collisionSound.play();
+		}
+		if (this.pos.x > 150 - R){
+			this.vel.x = - this.vel.x;
+			this.pos.x = 150 - R;
+			collisionSound.play();
+		}
+		if (this.pos.z < -150 + R){
+			this.vel.z = - this.vel.z;
+			this.pos.z = -150 + R;
+			collisionSound.play();
+		}
+		if (this.pos.z > 150 - R){
+			this.vel.z = - this.vel.z;
+			this.pos.z = 150 - R;
+			collisionSound.play();
+		}
+		
+		//puck-collision
+		for(var j = i + 1; j < pucks.length; j++){
+			var distance_x = this.pos.x - pucks[j].pos.x;
+			var distance_z = this.pos.z - pucks[j].pos.z;
+			var clooisionVectorLength = Math.sqrt(Math.pow(distance_x, 2) + Math.pow(distance_z, 2));
+			if (clooisionVectorLength < 2*R){
+				this.puck_collision(pucks[j], distance_x, distance_z,clooisionVectorLength);
+				collisionSound.play();
+			}
+		}
+
+		this.pos.copy (this.pos);
+		this.lightmove();
+	}
+	
+}
+
+class Well {
+	constructor (mesh) {
+		this.mesh = mesh;
+		this.pos = mesh.position;
+	}
+	setp(i){
+		var theta = i * Math.PI * 2 / 4;
+		this.pos.set(155*Math.cos(theta), 10, -155*Math.sin(theta));
+		this.mesh.rotation.y = theta+0.5*Math.PI;
+	}
+}
+init();
+animate();
+
+function toggle() {
+	isDimming = !isDimming;
+	sign = isDimming ? -1 : 1;
+	// console.log (isDimming);
+}
+
+function makepucks(angle,n) {
+	let puckMat = new THREE.MeshPhongMaterial();
+	var a1 = [0x00ffff, 0x0000ff, 0xff0066, 0xff0000, 0x99ff33, 0xff00ff, 0x6600ff, 0xff8033, 0xffff00, 0xff6600, 0x3333ff, 0x003300, 0x660066, 0x993535, 0x663300];
+	puckMat.color = new THREE.Color().set (a1[n]);
+	mesh = new THREE.Mesh (new THREE.CylinderGeometry(R, R, 6, 20), puckMat);
+	
+	var velx = [20, 12, -10, 8, -11, 5, 7, 15, -10, 6, 9, 7, 0, 9, -3];
+	var velz = [3, 8, 6, -9, -8, -4, -3, 10, 12, 5, 7, -6, 0, 20, -5];
+	var puck = new Puck(new THREE.Vector3(velx[n], 0, velz[n]), mesh, new THREE.PointLight(0xffffff, 1));
+	
+	puck.setf(angle,puckMat);
+	
+	scene.add(puck.mesh, puck.light);
+	return puck;
+}
+
+function makewells(i){
+		let wellMat = new THREE.MeshPhongMaterial({color: 0x505050, emissive:0x505050, transparent: true, opacity:0.4});
+		mesh = new THREE.Mesh (new THREE.BoxGeometry(320,40, 10), wellMat);
+		var well = new Well(mesh);
+		well.setp(i);
+		//wall.position.set(0, 10, 105);
+		scene.add (well.mesh);
+}
+
+function init() {
+	collisionSound = document.getElementById ('collisionsound');
+	soundTrack = document.getElementById ('soundtrack');
+	
+	scene = new THREE.Scene();
+
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor(0x888888);
+	document.body.appendChild(renderer.domElement);
+
+	camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+	camera.position.set (0,350,350);
+	let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+	var ground = new THREE.Mesh(new THREE.BoxGeometry(300, 10, 300), new THREE.MeshPhongMaterial({color: 0x2e2e2e, emissive: 0x2e2e2e}));
+	ground.position.y = -5;
+	scene.add (ground);
+
+	for(var i = 0; i < 4; i++)var well = makewells(i);
+	////////////////////////////////////////////////////////
+	var light = new THREE.PointLight(0xffffff, 1);
+	light.position.set(0,100,0);
+	scene.add(light);
+	var rn = Math.floor(Math.random()*15);
+	
+	if(rn < 5)rn+=5;
+	for (var i = 0;i < rn;i++){
+		angle = i* 2* Math.PI/15;
+		pucks.push(makepucks(angle,i));
+	}	
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+	render();
+	soundVal += sign*0.01;
+	soundVal = THREE.Math.clamp (soundVal, 0, 1);
+	soundtrack.volume = soundVal;
+	var dt = 0.1;
+	for (let i = 0; i < pucks.length; i++) {
+		pucks[i].update (dt, i, pucks);
+	}
+}
+
+function render() {
+
+	renderer.render(scene, camera);
+}
+
+</script>
+</body>
+
+</html>
