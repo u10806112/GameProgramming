@@ -135,22 +135,18 @@ function buildHead(WW, HH, DD) {
   vertices.push(-WW/2,HH,-DD/2, -WW/2,0,-DD/2, -WW/2,0,DD/2, -WW/2,HH,DD/2 ); // 5,6,7,4
   indices.push(4,5,6, 4,6,7);
   uvs.push (g.u/UU,g.v/VV, l.u/UU,l.v/VV, m.u/UU,m.v/VV, h.u/UU,h.v/VV); // g,l,m,h
-  
 	// PZ
   vertices.push(-WW/2,HH,DD/2, -WW/2,0,DD/2, WW/2,0,DD/2, WW/2,HH,DD/2 ); // 4,7,3,0
   indices.push(8,9,10, 8,10,11);
   uvs.push (d.u/UU,d.v/VV, i.u/UU,i.v/VV, j.u/UU,j.v/VV, e.u/UU,e.v/VV); // d,i,j,e
-
 	// NZ
   vertices.push(WW/2,HH,-DD/2, WW/2,0,-DD/2, -WW/2,0,-DD/2, -WW/2,HH,-DD/2 ); // 1,2,6,5
   indices.push(12,13,14, 12,14,15);
   uvs.push (f.u/UU,f.v/VV, k.u/UU,k.v/VV, l.u/UU,l.v/VV, g.u/UU,g.v/VV); // f,k,l,g
-  
   	// PY
   vertices.push(-WW/2,HH,DD/2, WW/2,HH,DD/2, WW/2,HH,-DD/2, -WW/2,HH,-DD/2 ); // 4,0,1,5
   indices.push(16,17,18, 16,18,19);
   uvs.push (a.u/UU,a.v/VV, e.u/UU,e.v/VV, f.u/UU,f.v/VV, b.u/UU,b.v/VV); // a,e,f,b
-
 	// NY
   vertices.push(WW/2,0,DD/2, -WW/2,0,DD/2, -WW/2,0,-DD/2, WW/2,0,-DD/2 ); // 3,7,6,2
   indices.push(20,21,22, 20,22,23);
@@ -197,22 +193,18 @@ function buildArm(WW, HH, DD) {
   vertices.push(-WW/2,0,-DD/2, -WW/2,-HH,-DD/2, -WW/2,-HH,DD/2, -WW/2,0,DD/2 ); // 5,6,7,4
   indices.push(4,5,6, 4,6,7);
   uvs.push (g.u/UU,g.v/VV, l.u/UU,l.v/VV, m.u/UU,m.v/VV, h.u/UU,h.v/VV); // g,l,m,h
-  
 	// PZ
   vertices.push(-WW/2,0,DD/2, -WW/2,-HH,DD/2, WW/2,-HH,DD/2, WW/2,0,DD/2 ); // 4,7,3,0
   indices.push(8,9,10, 8,10,11);
   uvs.push (d.u/UU,d.v/VV, i.u/UU,i.v/VV, j.u/UU,j.v/VV, e.u/UU,e.v/VV); // d,i,j,e
-
 	// NZ
   vertices.push(WW/2,0,-DD/2, WW/2,-HH,-DD/2, -WW/2,-HH,-DD/2, -WW/2,0,-DD/2 ); // 1,2,6,5
   indices.push(12,13,14, 12,14,15);
   uvs.push (f.u/UU,f.v/VV, k.u/UU,k.v/VV, l.u/UU,l.v/VV, g.u/UU,g.v/VV); // f,k,l,g
-  
   	// PY
   vertices.push(-WW/2,0,DD/2, WW/2,0,DD/2, WW/2,0,-DD/2, -WW/2,0,-DD/2 ); // 4,0,1,5
   indices.push(16,17,18, 16,18,19);
   uvs.push (a.u/UU,a.v/VV, e.u/UU,e.v/VV, f.u/UU,f.v/VV, b.u/UU,b.v/VV); // a,e,f,b
-
 	// NY
   vertices.push(WW/2,-HH,DD/2, -WW/2,-HH,DD/2, -WW/2,-HH,-DD/2, WW/2,-HH,-DD/2 ); // 3,7,6,2
   indices.push(20,21,22, 20,22,23);
@@ -245,7 +237,6 @@ function buildLeg(WW,HH,DD) {
   var f = {u: 2*ww, v:hh};
   var g = {u: 3*ww, v:hh};
   var h = {u: 4*ww, v:hh};
-  
   var i = {u: 0, v:0};
   var j = {u: ww, v:0};
   var k = {u: 2*ww, v:0};
@@ -260,22 +251,18 @@ function buildLeg(WW,HH,DD) {
   vertices.push(-WW/2,0,-DD/2, -WW/2,-HH,-DD/2, -WW/2,-HH,DD/2, -WW/2,0,DD/2 ); // 5,6,7,4
   indices.push(4,5,6, 4,6,7);
   uvs.push (g.u/UU,g.v/VV, l.u/UU,l.v/VV, m.u/UU,m.v/VV, h.u/UU,h.v/VV); // g,l,m,h
-  
 	// PZ
   vertices.push(-WW/2,0,DD/2, -WW/2,-HH,DD/2, WW/2,-HH,DD/2, WW/2,0,DD/2 ); // 4,7,3,0
   indices.push(8,9,10, 8,10,11);
   uvs.push (d.u/UU,d.v/VV, i.u/UU,i.v/VV, j.u/UU,j.v/VV, e.u/UU,e.v/VV); // d,i,j,e
-
 	// NZ
   vertices.push(WW/2,0,-DD/2, WW/2,-HH,-DD/2, -WW/2,-HH,-DD/2, -WW/2,0,-DD/2 ); // 1,2,6,5
   indices.push(12,13,14, 12,14,15);
   uvs.push (f.u/UU,f.v/VV, k.u/UU,k.v/VV, l.u/UU,l.v/VV, g.u/UU,g.v/VV); // f,k,l,g
-  
   	// PY
   vertices.push(-WW/2,0,DD/2, WW/2,0,DD/2, WW/2,0,-DD/2, -WW/2,0,-DD/2 ); // 4,0,1,5
   indices.push(16,17,18, 16,18,19);
   uvs.push (a.u/UU,a.v/VV, e.u/UU,e.v/VV, f.u/UU,f.v/VV, b.u/UU,b.v/VV); // a,e,f,b
-
 	// NY
   vertices.push(WW/2,-HH,DD/2, -WW/2,-HH,DD/2, -WW/2,-HH,-DD/2, WW/2,-HH,-DD/2 ); // 3,7,6,2
   indices.push(20,21,22, 20,22,23);
@@ -324,22 +311,18 @@ function buildBody(WW, HH, DD) {
   vertices.push(-WW/2,HH,-DD/2, -WW/2,0,-DD/2, -WW/2,0,DD/2, -WW/2,HH,DD/2 ); // 5,6,7,4
   indices.push(4,5,6, 4,6,7);
   uvs.push (g.u/UU,g.v/VV, l.u/UU,l.v/VV, m.u/UU,m.v/VV, h.u/UU,h.v/VV); // g,l,m,h
-  
 	// PZ
   vertices.push(-WW/2,HH,DD/2, -WW/2,0,DD/2, WW/2,0,DD/2, WW/2,HH,DD/2 ); // 4,7,3,0
   indices.push(8,9,10, 8,10,11);
   uvs.push (d.u/UU,d.v/VV, i.u/UU,i.v/VV, j.u/UU,j.v/VV, e.u/UU,e.v/VV); // d,i,j,e
-
 	// NZ
   vertices.push(WW/2,HH,-DD/2, WW/2,0,-DD/2, -WW/2,0,-DD/2, -WW/2,HH,-DD/2 ); // 1,2,6,5
   indices.push(12,13,14, 12,14,15);
   uvs.push (f.u/UU,f.v/VV, k.u/UU,k.v/VV, l.u/UU,l.v/VV, g.u/UU,g.v/VV); // f,k,l,g
-  
   	// PY
   vertices.push(-WW/2,HH,DD/2, WW/2,HH,DD/2, WW/2,HH,-DD/2, -WW/2,HH,-DD/2 ); // 4,0,1,5
   indices.push(16,17,18, 16,18,19);
   uvs.push (a.u/UU,a.v/VV, e.u/UU,e.v/VV, f.u/UU,f.v/VV, b.u/UU,b.v/VV); // a,e,f,b
-
 	// NY
   vertices.push(WW/2,0,DD/2, -WW/2,0,DD/2, -WW/2,0,-DD/2, WW/2,0,-DD/2 ); // 3,7,6,2
   indices.push(20,21,22, 20,22,23);
@@ -460,7 +443,6 @@ function update(dt) {
     power = 120.0
   else if (power < 0)
     power = 0
-  //console.log(power);
 //  power = Math.clamp (power, 0, 80.0); //Uncaught TypeError: Math.clamp is not a function
   
   
