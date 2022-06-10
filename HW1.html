@@ -58,6 +58,10 @@ $('#play').click ( function() {
 
 $('#dimmer').click (function() { toggle(); });
 
+function clamp (val, min, max) { // min <= val <= max
+   return Math.min(Math.max(val,min),max);
+}
+
 class Puck {
 	constructor (vel, mesh, light) {
 		this.vel = vel;
@@ -217,7 +221,7 @@ function animate() {
 	requestAnimationFrame(animate);
 	render();
 	soundVal += sign*0.01;
-	soundVal = THREE.Math.clamp (soundVal, 0, 1);
+	soundVal = clamp (soundVal, 0, 1);
 	soundtrack.volume = soundVal;
 	var dt = 0.1;
 	for (let i = 0; i < pucks.length; i++) {
